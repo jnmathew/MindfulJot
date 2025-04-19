@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import db.repository.EmotionEntryRepository;
 import models.Emotion;
 import models.EmotionEntry;
 import utils.FirebaseHelper;
@@ -39,6 +40,7 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
     private BottomNavigationView bottomNavigationView;
     private FirebaseHelper firebaseHelper;
     private LoginManager loginManager;
+    private EmotionEntryRepository emotionEntryRepo;
     private String userId;
     private boolean isFirstResume = true;
 
@@ -50,6 +52,8 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
         // Initialize helpers
         firebaseHelper = FirebaseHelper.getInstance();
         loginManager = LoginManager.getInstance();
+
+        emotionEntryRepo = EmotionEntryRepository.getInstance(getApplicationContext());
 
         // Get current user ID
         if (firebaseHelper.getCurrentUser() != null) {
@@ -167,51 +171,51 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
         LocalDate today = LocalDate.now();
         LocalDate yesterday = today.minusDays(1);
 
-        firebaseHelper.getEntriesForDate(userId, today, new FirebaseHelper.FilteredEntriesListener() {
+        long startToday = today.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endToday = today.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        long startYesterday = yesterday.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endYesterday = today.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        emotionEntryRepo.getEntriesInRange(userId, startToday, endToday, new EmotionEntryRepository.Callback<List<EmotionEntry>>() {
             @Override
             public void onSuccess(List<EmotionEntry> entriesToday) {
                 boolean hasToday = !entriesToday.isEmpty();
 
-                firebaseHelper.getEntriesForDate(userId, yesterday, new FirebaseHelper.FilteredEntriesListener() {
+                emotionEntryRepo.getEntriesInRange(userId, startYesterday, endYesterday, new EmotionEntryRepository.Callback<List<EmotionEntry>>() {
                     @Override
                     public void onSuccess(List<EmotionEntry> entriesYesterday) {
                         boolean hasYesterday = !entriesYesterday.isEmpty();
 
-                        // case 1: No entries for today or yesterday
-                        if (!hasToday && !hasYesterday) {
-                            tvStreak.setText("You've been logging for 0 days.");
-                            return;
-                        }
-
-                        // case 2: Only yesterday has an entry
-                        if (!hasToday) {
-                            tvStreak.setText("You've been logging for 1 day - keep it up!");
-                            return;
-                        }
-
-                        // case 3: Entry today → calculate full streak
-                        calculateFullStreak();
+                        runOnUiThread(() -> {
+                            if (!hasToday && !hasYesterday) {
+                                tvStreak.setText("You've been logging for 0 days.");
+                            } else if (!hasToday) {
+                                tvStreak.setText("You've been logging for 1 day - keep it up!");
+                            } else {
+                                // If entry exists for today, compute full streak
+                                calculateFullStreak();
+                            }
+                        });
                     }
 
                     @Override
-                    public void onFailure(DatabaseError error) {
-
+                    public void onFailure(Throwable error) {
+                        runOnUiThread(() -> tvStreak.setText("Unable to load streak."));
                     }
                 });
             }
 
             @Override
-            public void onFailure(DatabaseError error) {
-                tvStreak.setText("Unable to load streak.");
+            public void onFailure(Throwable error) {
+                runOnUiThread(() -> tvStreak.setText("Unable to load streak."));
             }
         });
     }
 
 
     private void calculateFullStreak() {
-        LocalDate today = LocalDate.now();
-
-        firebaseHelper.getAllEntries(userId, new FirebaseHelper.FilteredEntriesListener() {
+        emotionEntryRepo.getAllEntriesForUser(userId, new EmotionEntryRepository.Callback<List<EmotionEntry>>() {
             @Override
             public void onSuccess(List<EmotionEntry> entries) {
                 Set<LocalDate> entryDates = new HashSet<>();
@@ -227,7 +231,7 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
                 }
 
                 int streak = 0;
-                LocalDate current = today;
+                LocalDate current = LocalDate.now();
                 while (entryDates.contains(current)) {
                     streak++;
                     current = current.minusDays(1);
@@ -236,12 +240,13 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
                 String msg = "You've been logging for "
                         + streak + " day" + (streak == 1 ? "" : "s")
                         + " – congratulations!";
-                tvStreak.setText(msg);
+
+                runOnUiThread(() -> tvStreak.setText(msg));
             }
 
             @Override
-            public void onFailure(DatabaseError error) {
-                tvStreak.setText("Unable to load streak.");
+            public void onFailure(Throwable error) {
+                runOnUiThread(() -> tvStreak.setText("Unable to load streak."));
             }
         });
     }
@@ -311,7 +316,10 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
         LocalDate startDate = getStartDateForTimeframe(timeframe);
         LocalDate endDate = LocalDate.now();
 
-        firebaseHelper.getEntriesInRange(userId, startDate, endDate, new FirebaseHelper.FilteredEntriesListener() {
+        long startMillis = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endMillis = endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        emotionEntryRepo.getEntriesInRange(userId, startMillis, endMillis, new EmotionEntryRepository.Callback<List<EmotionEntry>>() {
             @Override
             public void onSuccess(List<EmotionEntry> entries) {
                 int totalLogs = entries.size();
@@ -326,12 +334,12 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
                         totalEmotions == 1 ? "" : "s"
                 );
 
-                tvLogFrequency.setText(message);
+                runOnUiThread(() -> tvLogFrequency.setText(message));
             }
 
             @Override
-            public void onFailure(DatabaseError error) {
-                tvLogFrequency.setText("Unable to load log frequency.");
+            public void onFailure(Throwable error) {
+                runOnUiThread(() -> tvLogFrequency.setText("Unable to load log frequency."));
             }
         });
     }
@@ -358,10 +366,13 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
         LocalDate startDate = getStartDateForTimeframe(timeframe);
         LocalDate endDate = LocalDate.now();
 
+        long startMillis = startDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long endMillis = endDate.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
         String custom_tf = timeframe.toString().toLowerCase();
         tvBreakdownTitle.setText("This is your emotion breakdown for " + custom_tf + ":");
 
-        firebaseHelper.getEntriesInRange(userId, startDate, endDate, new FirebaseHelper.FilteredEntriesListener() {
+        emotionEntryRepo.getEntriesInRange(userId, startMillis, endMillis, new EmotionEntryRepository.Callback<List<EmotionEntry>>() {
             @Override
             public void onSuccess(List<EmotionEntry> entries) {
                 int hep = 0, lep = 0, heu = 0, leu = 0;
@@ -389,27 +400,33 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
                     }
                 }
 
-                // Protect against divide by 0
-                if (total == 0) {
-                    tvHighEnergyPleasant.setText("High energy pleasant: 0%");
-                    tvLowEnergyPleasant.setText("Low energy pleasant: 0%");
-                    tvHighEnergyUnpleasant.setText("High energy unpleasant: 0%");
-                    tvLowEnergyUnpleasant.setText("Low energy unpleasant: 0%");
-                    return;
-                }
+                // Lambda needs these local variables to be final
+                final int fHep = hep, fLep = lep, fHeu = heu, fLeu = leu, fTotal = total;
 
-                tvHighEnergyPleasant.setText(String.format(Locale.getDefault(), "High energy pleasant: %d%%", (hep * 100) / total));
-                tvLowEnergyPleasant.setText(String.format(Locale.getDefault(), "Low energy pleasant: %d%%", (lep * 100) / total));
-                tvHighEnergyUnpleasant.setText(String.format(Locale.getDefault(), "High energy unpleasant: %d%%", (heu * 100) / total));
-                tvLowEnergyUnpleasant.setText(String.format(Locale.getDefault(), "Low energy unpleasant: %d%%", (leu * 100) / total));
+                runOnUiThread(() -> {
+                    if (fTotal == 0) {
+                        tvHighEnergyPleasant.setText("High energy pleasant: 0%");
+                        tvLowEnergyPleasant.setText("Low energy pleasant: 0%");
+                        tvHighEnergyUnpleasant.setText("High energy unpleasant: 0%");
+                        tvLowEnergyUnpleasant.setText("Low energy unpleasant: 0%");
+                        return;
+                    }
+
+                    tvHighEnergyPleasant.setText(String.format(Locale.getDefault(), "High energy pleasant: %d%%", (fHep * 100) / fTotal));
+                    tvLowEnergyPleasant.setText(String.format(Locale.getDefault(), "Low energy pleasant: %d%%", (fLep * 100) / fTotal));
+                    tvHighEnergyUnpleasant.setText(String.format(Locale.getDefault(), "High energy unpleasant: %d%%", (fHeu * 100) / fTotal));
+                    tvLowEnergyUnpleasant.setText(String.format(Locale.getDefault(), "Low energy unpleasant: %d%%", (fLeu * 100) / fTotal));
+                });
             }
 
             @Override
-            public void onFailure(DatabaseError error) {
-                tvHighEnergyPleasant.setText("High energy pleasant: --");
-                tvLowEnergyPleasant.setText("Low energy pleasant: --");
-                tvHighEnergyUnpleasant.setText("High energy unpleasant: --");
-                tvLowEnergyUnpleasant.setText("Low energy unpleasant: --");
+            public void onFailure(Throwable error) {
+                runOnUiThread(() -> {
+                    tvHighEnergyPleasant.setText("High energy pleasant: --");
+                    tvLowEnergyPleasant.setText("Low energy pleasant: --");
+                    tvHighEnergyUnpleasant.setText("High energy unpleasant: --");
+                    tvLowEnergyUnpleasant.setText("Low energy unpleasant: --");
+                });
             }
         });
     }
@@ -429,5 +446,4 @@ public class AnalyticsActivity extends AppCompatActivity implements BottomNaviga
         loadLogFrequency(selectedTimeframe);
         loadEmotionBreakdown(selectedTimeframe);
     }
-
 }
