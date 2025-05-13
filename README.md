@@ -1,6 +1,8 @@
 # MindfulJot
 
-![MindfulJot Logo](app/src/main/res/drawable/mindfuljot_logo.png)
+<p align="center">
+  <img src="readme-assets/mindfuljot-logo-readme.png" alt="MindfulJot Logo" width="150"/>
+</p>
 
 **MindfulJot** is a sleek, mobile-first Android app designed to support mental wellness through emotion tracking and journaling. Users can log daily entries with multiple emotions, view insights like mood streaks and emotional quadrant breakdowns, and reflect using a clean, intuitive UI.
 
@@ -71,25 +73,39 @@ Built as a collaborative project to explore mobile development, user experience 
 
 ### Emotion Logging Flow
 Capture your current mood with up to two selected emotions, add optional tags, and begin journaling with a clean, expressive UI.  
-![Emotion Logging](readme-assets/emotion-logging-readme.gif)
+
+<p align="left">
+  <img src="readme-assets/emotion-logging-readme.gif" alt="Emotion Logging" width="300"/>
+</p>
+
+Analytics Dashboard
 
 ---
 
 ### Full Journal Entry View
 Reflect on your emotions with full journal text, attached media, and tags.  
-![Full Entry View](readme-assets/full-entry-readme.png)
+
+<p align="left">
+  <img src="readme-assets/full-entry-readme.png" alt="Full Journal Entry View" width="300"/>
+</p>
 
 ---
 
 ### Calendar Overview
-Visualize your emotional patterns over time using a dot-based calendar view.  
-![Calendar View](readme-assets/calendar-readme.gif)
+Visualize your emotional patterns over time using a dot-based calendar view. 
+
+<p align="left">
+  <img src="readme-assets/calendar-readme.gif" alt="Calendar View" width="300"/>
+</p>
 
 ---
 
 ### Mood Analytics Dashboard
 Track streaks, quadrant-based emotion breakdowns, and frequency trends over time.  
-![Analytics Dashboard](readme-assets/analytics-readme.gif)
+
+<p align="left">
+  <img src="readme-assets/analytics-readme.gif" alt="Analytics Dashboard" width="300"/>
+</p>
 
 ---
 
