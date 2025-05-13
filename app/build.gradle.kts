@@ -40,7 +40,6 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation ("com.google.firebase:firebase-storage:20.2.1")
 
-
     // Picasso for image loading
     implementation ("com.squareup.picasso:picasso:2.71828")
 
@@ -48,8 +47,6 @@ dependencies {
     // https://github.com/Applandeo/Material-Calendar-View
     implementation("com.applandeo:material-calendar-view:1.9.2")
 
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
