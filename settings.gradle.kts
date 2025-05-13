@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Group4_FinalProject"
+rootProject.name = "MindfulJot"
 include(":app")
