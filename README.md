@@ -64,8 +64,9 @@ Built as a collaborative project to explore mobile development, user experience 
 
 ## 🚧 Stretch Goals
 
-- 🛠️ Local storage with Room and offline syncing
-- 🔖 Tag filtering and search features
+- Local storage with Room and offline syncing
+- Tag filtering and search features
+- Migrate from Picasso to Coil (picasso is formally deprecated)
 
 ---
 
