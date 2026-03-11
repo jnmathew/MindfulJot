@@ -6,34 +6,31 @@
 
 **MindfulJot** is a sleek, mobile-first Android app designed to support mental wellness through emotion tracking and journaling. Users can log daily entries with multiple emotions, view insights like mood streaks and emotional quadrant breakdowns, and reflect using a clean, intuitive UI.
 
-Built as a collaborative project to explore mobile development, user experience design, and emotion-focused wellness tools.
 
----
+## Demo Video
 
-## ▶️ Demo
+<p align="left">
+  <img src="readme-assets/demo-preview-readme.png" alt="Demo Preview" width="450" a="https://www.youtube.com/watch?v=ui1oBhPFcwg"/>
+</p>
 
-📽️ [Watch the full walkthrough on YouTube](https://www.youtube.com/watch?v=ui1oBhPFcwg)  
 *(Recorded on Genymotion emulating a Google Pixel 5 running Android 13.0 / API 33)*
 
----
 
-## 📱 Features
+## Features
 
-- 🎭 Log daily entries with up to two emotions
-- 📝 Add journal reflections, tags, and optional media
-- 📊 Visualize mood insights:
+- Log daily entries with up to two emotions
+- Add journal reflections, tags, and optional media
+- Visualize mood insights:
   - Entry streaks
   - Emotion breakdowns by quadrant
   - Entry frequency over time
-- 📆 Calendar view with emotion-dot indicators
-- ☁️ Firebase integration for syncing and test accounts
-- 🔔 Optional daily journaling reminders
-- 🧹 Swipe-to-delete with confirmation prompts
-- 🎨 Custom UI with ConstraintLayout and RecyclerViews
+- Calendar view with emotion-dot indicators
+- Firebase integration for syncing and test accounts
+- Optional daily journaling reminders
+- Swipe-to-delete with confirmation prompts
+- Custom UI with ConstraintLayout and RecyclerViews
 
----
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language:** Java
 - **Platform:** Android (min SDK 27, target SDK 35)
@@ -48,29 +45,8 @@ Built as a collaborative project to explore mobile development, user experience 
   - Android Speech-to-Text API (voice input)
   - [Applandeo Material Calendar View](https://github.com/Applandeo/Material-Calendar-View)
 
-> **Stretch Goal:** Room (SQLite) for offline-first local storage
 
----
-
-## 👥 Contributors
-
-- **Joseph Mathew** ([jnmathew](https://github.com/jnmathew))  
-  Lead on analytics view, calendar UI with Firebase filters, Room integration (stretch goal), landscape layout support, test account setup, and various bug fixes.
-
-- **Elif Tirkes** ([skippyskiddy](https://github.com/skippyskiddy))  
-  Lead on app scaffolding, drawable assets, Firebase integration, emotion logging flow, onboarding, voice-to-text input, notifications, and overall design polish.
-
----
-
-## 🚧 Stretch Goals
-
-- Local storage with Room and offline syncing
-- Tag filtering and search features
-- Migrate from Picasso to Coil (picasso is formally deprecated)
-
----
-
-## 📸 Screenshots
+## Screen Previews
 
 ### Emotion Logging Flow
 Capture your current mood with up to two selected emotions, add optional tags, and begin journaling with a clean, expressive UI.  
@@ -79,9 +55,6 @@ Capture your current mood with up to two selected emotions, add optional tags, a
   <img src="readme-assets/emotion-logging-readme.gif" alt="Emotion Logging" width="300"/>
 </p>
 
-Analytics Dashboard
-
----
 
 ### Full Journal Entry View
 Reflect on your emotions with full journal text, attached media, and tags.  
@@ -90,7 +63,6 @@ Reflect on your emotions with full journal text, attached media, and tags.
   <img src="readme-assets/full-entry-readme.png" alt="Full Journal Entry View" width="300"/>
 </p>
 
----
 
 ### Calendar Overview
 Visualize your emotional patterns over time using a dot-based calendar view. 
@@ -99,7 +71,6 @@ Visualize your emotional patterns over time using a dot-based calendar view.
   <img src="readme-assets/calendar-readme.gif" alt="Calendar View" width="300"/>
 </p>
 
----
 
 ### Mood Analytics Dashboard
 Track streaks, quadrant-based emotion breakdowns, and frequency trends over time.  
@@ -108,7 +79,6 @@ Track streaks, quadrant-based emotion breakdowns, and frequency trends over time
   <img src="readme-assets/analytics-readme.gif" alt="Analytics Dashboard" width="300"/>
 </p>
 
----
 
 ## Getting Started
 
@@ -119,9 +89,35 @@ To run the app locally:
 3. Add your own Firebase `google-services.json` file under `app/`
 4. Build and run on an emulator or Android device
 
----
 
-## 📄 License Information
+## Stretch Goals
+
+- Local storage with Room and offline syncing
+- Tag filtering and search features
+- Migrate from Picasso to Coil (picasso is formally deprecated)
+
+
+## Project Origin & Note
+
+This repository contains a standalone version of MindfulJot, an Android emotion-tracking journaling app originally developed as a university course project in collaboration with Elif Tirkes ([skippyskiddy](https://github.com/skippyskiddy)).
+
+This version is maintained for portfolio presentation and continued experimentation with stretch goals (such as Room integration and Coil migration) without modifying the original academic codebase.
+
+The original project repository can be viewed [here](https://github.com/skippyskiddy/MindfulJot-App).
+
+All original commit history has been preserved to reflect the development process and individual contributions.
+
+
+## Contributors
+
+- **Joseph Mathew** ([jnmathew](https://github.com/jnmathew))  
+  Lead on analytics view, calendar UI with Firebase filters, Room integration (currently a stretch goal), landscape layout support, test account setup, and various bug fixes.
+
+- **Elif Tirkes** ([skippyskiddy](https://github.com/skippyskiddy))  
+  Lead on app scaffolding, drawable assets, Firebase integration, emotion logging flow, onboarding, voice-to-text input, notifications, and overall design polish.
+
+
+## License Information
 
 This project uses the [Material Calendar View](https://github.com/Applandeo/Material-Calendar-View) library by [Applandeo](https://github.com/Applandeo).
 
