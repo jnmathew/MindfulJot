@@ -10,7 +10,9 @@
 ## Demo Video
 
 <p align="left">
-  <img src="readme-assets/demo-preview-readme.png" alt="Demo Preview" width="450" a="https://www.youtube.com/watch?v=ui1oBhPFcwg"/>
+  <a href="https://www.youtube.com/watch?v=ui1oBhPFcwg">
+    <img src="readme-assets/demo-preview-readme.png" alt="Watch Demo Video" width="450"/>
+  </a>
 </p>
 
 *(Recorded on Genymotion emulating a Google Pixel 5 running Android 13.0 / API 33)*
